@@ -1,0 +1,26 @@
+name: Comment on Pull Request
+
+on:
+  pull_request:
+    types: [opened, edited, reopened, synchronize]
+
+jobs:
+  add-comment:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Add comment to PR
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const issue_number = context.issue.number;
+          const comment = 'Thank you for your pull request! We will review it soon.';
+          
+          await github.rest.issues.createComment({
+            ...context.repo,
+            issue_number,
+            body: comment
+          });
